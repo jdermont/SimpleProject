@@ -2,6 +2,8 @@ package pl.derjack.simpleproject;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,12 +12,22 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import pl.derjack.simpleproject.entity.TvShow;
 import pl.derjack.simpleproject.recyclerview.MainAdapter;
 import pl.derjack.simpleproject.ws.ApiClient;
+import pl.derjack.simpleproject.ws.model.WsModelConverterKt;
+import pl.derjack.simpleproject.ws.model.WsTVShow;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private SearchView searchView;
     private RecyclerView recyclerView;
@@ -33,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupRecyclerView() {
         recyclerView = findViewById(R.id.mainRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        mainAdapter = new MainAdapter();
+        mainAdapter = new MainAdapter(this);
         recyclerView.setAdapter(mainAdapter);
     }
 
@@ -48,12 +60,13 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(getApplicationContext(), query, Toast.LENGTH_SHORT).show();
+                searchShows(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                searchShows(newText);
                 return true;
             }
         });
@@ -61,19 +74,27 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.search_menu, menu)
-//        val searchItem = menu?.findItem(R.id.action_search)
-//        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-//
-//        searchView = searchItem?.actionView as SearchView
-//        searchView?.setSearchableInfo(searchManager.getSearchableInfo(this.componentName))
-//        searchView?.setOnQueryTextListener(queryTextListener)
-//        if (!searchText.isEmpty()) {
-//            searchView?.setQuery(searchText, false)
-//            searchItem.expandActionView()
-//        }
-//
-//        return super.onCreateOptionsMenu(menu)
-//    }
+    private void searchShows(String query) {
+        ApiClient.getInstance().retrieveTVShows(query)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(wsShows -> {
+                    List<TvShow> tvShows = new ArrayList<>(wsShows.size());
+                    for (WsTVShow wsShow : wsShows) {
+                        tvShows.add(WsModelConverterKt.convertToTvShowEntity(wsShow.getShow()));
+                    }
+                    mainAdapter.updateShows(tvShows);
+                });
+    }
+
+    @Override
+    public void onClick(View v) {
+        TvShow tvShow = (TvShow) v.getTag();
+        Intent intent = new Intent(getApplicationContext(), DetailsActivity.class);
+        intent.putExtra(DetailsActivity.KEY_TVSHOW, tvShow);
+        ActivityOptionsCompat options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(this, v.findViewById(R.id.mainItemImage), getString(R.string.transition_image));
+        startActivity(intent, options.toBundle());
+    }
+
 }

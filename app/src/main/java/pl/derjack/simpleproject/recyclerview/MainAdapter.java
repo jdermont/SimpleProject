@@ -12,7 +12,12 @@ import pl.derjack.simpleproject.entity.TvShow;
 
 public class MainAdapter extends RecyclerView.Adapter<TvViewHolder> {
 
+    private View.OnClickListener onClickListener;
     private List<TvShow> tvShows;
+
+    public MainAdapter(View.OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
 
     public void updateShows(List<TvShow> tvShows) {
         this.tvShows = tvShows;
@@ -22,7 +27,7 @@ public class MainAdapter extends RecyclerView.Adapter<TvViewHolder> {
     @Override
     public TvViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_item, parent, false);
-        return new TvViewHolder(view);
+        return new TvViewHolder(view, onClickListener);
     }
 
     @Override

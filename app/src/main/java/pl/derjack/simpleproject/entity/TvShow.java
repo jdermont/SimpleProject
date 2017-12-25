@@ -104,6 +104,82 @@ public class TvShow implements Parcelable, Comparable<TvShow> {
         return episodes;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public void setGenres(List<String> genres) {
+        this.genres = genres;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setRuntime(int runtime) {
+        this.runtime = runtime;
+    }
+
+    public void setPremiered(String premiered) {
+        this.premiered = premiered;
+    }
+
+    public void setScheduleTime(String scheduleTime) {
+        this.scheduleTime = scheduleTime;
+    }
+
+    public void setScheduleDays(List<String> scheduleDays) {
+        this.scheduleDays = scheduleDays;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public void setNetwork(Network network) {
+        this.network = network;
+    }
+
+    public void setMediumImage(String mediumImage) {
+        this.mediumImage = mediumImage;
+    }
+
+    public void setOriginalImage(String originalImage) {
+        this.originalImage = originalImage;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public void setUpdated(long updated) {
+        this.updated = updated;
+    }
+
+    public void setEpisodes(List<Episode> episodes) {
+        this.episodes = episodes;
+    }
+
     public TvShow() {
 
     }

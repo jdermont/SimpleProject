@@ -16,7 +16,7 @@
 
         <ImageView
             android:id="@+id/mainItemImage"
-            android:transitionName="@string/transision_image"
+            android:transitionName="@string/transition_image"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
@@ -47,14 +47,6 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 tools:text="Status: Running\nRating: 8.0\nLatest episode: 10x01\nNext episode: 10x02 (2017-10-01)"/>
-
-            <TextView
-                android:id="@+id/mainItemNextEpisodeInDays"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/global_margin"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                tools:text="Next episode in 48 days"/>
 
         </LinearLayout>
     </LinearLayout>
